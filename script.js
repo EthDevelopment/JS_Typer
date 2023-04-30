@@ -1,33 +1,32 @@
-const fileInput = document.getElementById("myFileInput");
-const button = document.getElementById('txtInput');
-const quoteDisplay = document.querySelector(".quote-display");
+const quoteDisplay = document.getElementById("quoteDisplay");  // Get the div element by its ID
+const txtInput = document.getElementById("txtInput");
+const btnInput = document.getElementById("btnInput");
+const tracker = document.getElementById("tracker");
 
-if (button) {
-  button.addEventListener("click", function() {
-    fileInput.click(); // Trigger the file selection dialog
-  });
-  
-  fileInput.addEventListener("change", function() {
-    readFile(fileInput); // Read the contents of the selected file
-  });
-} else {
-  console.log("The button element could not be found.");
-}
+let wordsTyped = 0;
 
-function readFile(input) {
-  const file = input.files[0];
-  const reader = new FileReader();
+// Initialize the tracker
+tracker.textContent = `Words Typed: ${wordsTyped}`;
 
-  reader.onload = function() {
-    const text = reader.result;
-    quoteDisplay.textContent = text; // Update the quote display element with the file contents
+// Add an event listener to the text bot to detect when the user types
+txtInput.addEventListener("input", function(event) {
+  const inputText = event.target.value;
+  const quoteText = quoteDisplay.textContent;
+
+  // Split the quote and input text into arrays of words
+  const inputWords = inputText.split(" ");
+  const quoteWords = quoteText.split(" ");
+
+  // Count the number of words that match between the quote and input words
+  let numMatches= 0;
+  for (let i=0; i<inputWords.length; i++) {
+    if (inputWords[i] === quoteWords[i]) {
+      numMatches++;
+    } else{
+      break;
+    }
   }
-
-  reader.readAsText(file);
-}
-
-// This function uses the 'rtf-to-text' library to convert RTF formatted text to plain text
-function rtfToText(rtfText) {
-  const rtfToTextConverter = require('rtf-to-text');
-  return rtfToTextConverter.convert(rtfText);
-}
+  // Update the words typed counter
+  wordsTyped = numMatches;
+  tracker.textContent = `Words Typed: ${wordsTyped}`;
+});
