@@ -13,8 +13,11 @@ txtInput.addEventListener("input", function(event) {
   const inputText = event.target.value;
   const quoteText = quoteDisplay.textContent;
 
+  // Remove unwanted characters from the input text
+  const cleanedInputText= inputText.replace(/[^\w\s]/gi, '');
+
   // Split the quote and input text into arrays of words
-  const inputWords = inputText.split(" ");
+  const inputWords = cleanedInputText.split(" ");
   const quoteWords = quoteText.split(" ");
 
   // Count the number of words that match between the quote and input words
@@ -29,4 +32,17 @@ txtInput.addEventListener("input", function(event) {
   // Update the words typed counter
   wordsTyped = numMatches;
   tracker.textContent = `Words Typed: ${wordsTyped}`;
+});
+
+const fileInput = document.getElementById("fileInput");
+
+fileInput.addEventListener("change", function(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+
+  reader.addEventListener("load", function() {
+  quoteDisplay.textContent = reader.result;
+  });
+
+  reader.readAsText(file);
 });
